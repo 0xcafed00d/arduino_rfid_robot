@@ -36,4 +36,7 @@ add_custom_target(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(arduino_rfid_robot src/main.cpp)
+add_executable(arduino_rfid_robot src/main.cpp
+        src/state.cpp src/state.h
+        src/RFIDReader.cpp src/RFIDReader.h
+        src/utils.cpp src/utils.h)

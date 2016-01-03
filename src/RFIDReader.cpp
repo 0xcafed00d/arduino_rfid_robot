@@ -1,7 +1,6 @@
 #include "Arduino.h"
 #include <MFRC522.h>  // https://github.com/miguelbalboa/rfid
 #include "state.h"
-#include "MP3Player.h"
 #include "utils.h"
 
 namespace RFIDReader {
@@ -131,18 +130,6 @@ namespace RFIDReader {
                 bool ok = readFromCard(buffer, size, 1);
 
                 if (ok) {
-                    utils::Log(F("Data in block "));
-                    utils::Log(1);
-                    utils::Logln(F(":"));
-                    utils::dump_byte_array(buffer, 16);
-                    utils::Logln("");
-                    utils::Logln("");
-                    utils::Logln((char*)buffer);
-
-                    if (memcmp((const char*)buffer, "music:", 6) == 0) {
-                        int id = (int)strtol((const char*)buffer + 6, NULL, 10);
-                        MP3Player::PlayAlbum(id);
-                    }
                 }
                 stateGoto(stateRestart);
             }

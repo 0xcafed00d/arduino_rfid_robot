@@ -1,7 +1,6 @@
 #include "Arduino.h"
 #include "RFIDReader.h"
 #include "SPI.h"
-#include "MP3Player.h"
 #include "utils.h"
 
 utils::TimeOut inactiveTimer;
@@ -14,21 +13,10 @@ void setup() {
     inactiveTimer = utils::TimeOut(offTime);
 
     RFIDReader::Setup();
-    MP3Player::Setup();
 }
 
 void loop() {
     utils::UpdateLoggingState();
     delay(10);
     RFIDReader::stateMachine.stateAction();
-    MP3Player::stateMachine.stateAction();
-
-    if (MP3Player::IsPlaying()) {
-        inactiveTimer = utils::TimeOut(offTime);
-    }
-
-    if (inactiveTimer.hasTimedOut()) {
-        pinMode(2, OUTPUT);
-        digitalWrite(2, HIGH);
-    }
 }
