@@ -33,3 +33,5 @@ libraries/*
 .pioenvs
 .sconsign.dblite
 .idea
+.piolibdeps
+.vscode/c_cpp_properties.json
