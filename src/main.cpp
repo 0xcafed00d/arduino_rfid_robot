@@ -3,20 +3,20 @@
 #include "SPI.h"
 #include "utils.h"
 
-utils::TimeOut inactiveTimer;
-const uint32_t offTime = 30000;  // 30 seconds
+const int RST_PIN = 9;
+const int SS_PIN = 10;
+
+RFIDReader rfid(SS_PIN, RST_PIN);
 
 void setup() {
-    // while(!Serial);  // Remove before Flight
-    SPI.begin();
+	// while(!Serial);  // Remove before Flight
+	SPI.begin();
 
-    inactiveTimer = utils::TimeOut(offTime);
-
-    RFIDReader::Setup();
+	rfid.init();
 }
 
 void loop() {
-    utils::UpdateLoggingState();
-    delay(10);
-    RFIDReader::stateMachine.stateAction();
+	utils::UpdateLoggingState();
+	delay(10);
+	rfid.stateUpdate();
 }
