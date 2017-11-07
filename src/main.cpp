@@ -3,6 +3,10 @@
 #include "SPI.h"
 #include "utils.h"
 
+#include "log.h"
+
+Logger loggr(Serial);
+
 const int RST_PIN = 9;
 const int SS_PIN = 10;
 
@@ -13,6 +17,8 @@ void setup() {
 	SPI.begin();
 
 	rfid.init();
+
+	loggr << "hello" << 12726 << "world";
 }
 
 void loop() {
