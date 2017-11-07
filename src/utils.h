@@ -5,36 +5,37 @@
 
 namespace utils {
 
-    class TimeOut {
-        uint32_t end;
+	class TimeOut {
+		uint32_t interval;
+		uint32_t start;
 
-       public:
-        TimeOut(uint32_t timeoutms = 0) {
-            end = (uint32_t)millis() + timeoutms;
-        }
+	   public:
+		TimeOut(uint32_t timeoutms = 0) : interval(timeoutms) {
+			start = millis();
+		}
 
-        bool hasTimedOut() const {
-            return millis() > end;
-        }
-    };
+		bool hasTimedOut() const {
+			return (millis() - start) > interval;
+		}
+	};
 
-    void UpdateLoggingState();
-    bool loggingEnabled();
+	void UpdateLoggingState();
+	bool loggingEnabled();
 
-    template <typename T>
-    void Log(T v) {
-        if (loggingEnabled())
-            Serial.print(v);
-    }
+	template <typename T>
+	void Log(T v) {
+		if (loggingEnabled())
+			Serial.print(v);
+	}
 
-    template <typename T>
-    void Logln(T v) {
-        if (loggingEnabled())
-            Serial.println(v);
-    }
+	template <typename T>
+	void Logln(T v) {
+		if (loggingEnabled())
+			Serial.println(v);
+	}
 
-    void Logln();
-    void dump_byte_array(byte* buffer, byte bufferSize);
+	void Logln();
+	void dump_byte_array(byte* buffer, byte bufferSize);
 }
 
 #endif  // ARDUINO_RFID_MUSICPLAYER_UTILS_H
