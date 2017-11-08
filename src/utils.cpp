@@ -1,28 +1,19 @@
 #include "utils.h"
+#include "log.h"
 
 namespace utils {
 
-    void Logln() {
-        if (loggingEnabled())
-            Serial.println();
-    }
+	void logByteArray(byte* buffer, byte bufferSize) {
+		char buf[3] = {};
+		static const char hex[] = "0123456789ABCDEF";
 
-    void dump_byte_array(byte* buffer, byte bufferSize) {
-        if (loggingEnabled()) {
-            for (byte i = 0; i < bufferSize; i++) {
-                Log(buffer[i] < 0x10 ? " 0" : " ");
-                Serial.print(buffer[i], HEX);
-            }
-        }
-    }
+		auto lp = logr << '[';
 
-    static bool loggingState = false;
-
-    bool loggingEnabled() {
-        return loggingState;
-    }
-
-    void UpdateLoggingState() {
-        loggingState = bool(Serial);
-    }
+		for (byte i = 0; i < bufferSize; i++) {
+			buf[0] = hex[(buffer[i] >> 4) & 0xf];
+			buf[1] = hex[buffer[i] & 0xf];
+			lp << buf;
+		}
+		lp << ']';
+	}
 }

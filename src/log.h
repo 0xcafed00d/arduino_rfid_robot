@@ -40,6 +40,7 @@ class Logger {
 	LogProxy operator<<(const T& v) {
 		if (m_enabled) {
 			m_stream.print(v);
+			m_stream.print(' ');
 		}
 		return LogProxy(*this);
 	};
@@ -57,5 +58,7 @@ class Logger {
 	int m_proxycount = 0;
 	bool m_enabled = true;
 };
+
+extern Logger logr;
 
 #endif /* LOG_H */

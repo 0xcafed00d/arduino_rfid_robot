@@ -5,7 +5,7 @@
 
 #include "log.h"
 
-Logger loggr(Serial);
+Logger logr(Serial);
 
 const int RST_PIN = 9;
 const int SS_PIN = 10;
@@ -17,12 +17,11 @@ void setup() {
 	SPI.begin();
 
 	rfid.init();
-
-	loggr << "hello" << 12726 << "world";
 }
 
 void loop() {
-	utils::UpdateLoggingState();
+	logr.enable(bool(Serial));
+
 	delay(10);
 	rfid.stateUpdate();
 }

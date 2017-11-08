@@ -19,23 +19,7 @@ namespace utils {
 		}
 	};
 
-	void UpdateLoggingState();
-	bool loggingEnabled();
-
-	template <typename T>
-	void Log(T v) {
-		if (loggingEnabled())
-			Serial.print(v);
-	}
-
-	template <typename T>
-	void Logln(T v) {
-		if (loggingEnabled())
-			Serial.println(v);
-	}
-
-	void Logln();
-	void dump_byte_array(byte* buffer, byte bufferSize);
+	void logByteArray(byte* buffer, byte bufferSize);
 }
 
 #endif  // ARDUINO_RFID_MUSICPLAYER_UTILS_H
