@@ -14,7 +14,7 @@ class Logger {
 		~LogProxy() {
 			m_logger.m_proxycount--;
 
-			if (m_logger.m_proxycount == 0) {
+			if (m_logger.m_enabled && m_logger.m_proxycount == 0) {
 				m_logger.m_stream.println();
 			}
 		}

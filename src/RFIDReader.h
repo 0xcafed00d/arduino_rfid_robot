@@ -5,14 +5,20 @@
 #include "state_machine.h"
 #include "utils.h"
 
+typedef void (*OnCardRead)(char*);
+
 class RFIDReader : public StateMachine<RFIDReader> {
    public:
 	RFIDReader(byte chipSelectPin, byte resetPowerDownPin)
-	    : mfrc522(chipSelectPin, resetPowerDownPin), StateMachine<RFIDReader>(this) {
+	    : StateMachine<RFIDReader>(this), mfrc522(chipSelectPin, resetPowerDownPin) {
 	}
 
 	void init() {
 		stateGoto(&RFIDReader::stateInit);
+	}
+
+	void setOnCardRead(OnCardRead f) {
+		m_onReadCard = f;
 	}
 
    private:
@@ -27,6 +33,7 @@ class RFIDReader : public StateMachine<RFIDReader> {
 	MFRC522 mfrc522;
 	MFRC522::MIFARE_Key key;
 	utils::TimeOut timeout;
+	OnCardRead m_onReadCard = NULL;
 };
 
 #endif  // ARDUINO_RFID_ROBOT_RDIFREADER_H

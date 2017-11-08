@@ -57,6 +57,9 @@ void RFIDReader::stateReadCard(Phase_t p) {
 
 			if (ok) {
 				logr << (char*)buffer;
+				if (m_onReadCard) {
+					m_onReadCard((char*)buffer);
+				}
 			}
 			stateGoto(&RFIDReader::stateRestart);
 		}
