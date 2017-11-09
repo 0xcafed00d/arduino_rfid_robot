@@ -1,5 +1,6 @@
 #include "Arduino.h"
-#include "RFIDReader.h"
+#include "rfidreader.h"
+#include "commandhandler.h"
 #include "SPI.h"
 #include "utils.h"
 
@@ -11,6 +12,7 @@ const int RST_PIN = 9;
 const int SS_PIN = 10;
 
 RFIDReader rfid(SS_PIN, RST_PIN);
+CommandHandler cmdHandler;
 
 void printCardData(char* data) {
 	Serial.println(data);

@@ -1,5 +1,5 @@
 
-#include "RFIDReader.h"
+#include "rfidreader.h"
 #include "log.h"
 
 byte calcTrailerBlock(byte blockAddress) {
