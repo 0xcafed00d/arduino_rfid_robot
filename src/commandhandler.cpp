@@ -1,4 +1,5 @@
 #include "commandhandler.h"
+#include "log.h"
 
 void CommandHandler::stateInit(Phase_t p) {
 	if (p == Phase_t::Enter) {

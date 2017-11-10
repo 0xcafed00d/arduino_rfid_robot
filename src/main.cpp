@@ -14,8 +14,10 @@ const int SS_PIN = 10;
 RFIDReader rfid(SS_PIN, RST_PIN);
 CommandHandler cmdHandler;
 
-void printCardData(char* data) {
+void onCardRead(char* data) {
 	Serial.println(data);
+	Command c = parseCommand(data);
+	cmdHandler.addCommand(c);
 }
 
 void setup() {
@@ -23,7 +25,9 @@ void setup() {
 	SPI.begin();
 
 	rfid.init();
-	rfid.setOnCardRead(&printCardData);
+	rfid.setOnCardRead(&onCardRead);
+
+	cmdHandler.init();
 }
 
 void loop() {
@@ -32,4 +36,5 @@ void loop() {
 
 	delay(10);
 	rfid.stateUpdate();
+	cmdHandler.stateUpdate();
 }

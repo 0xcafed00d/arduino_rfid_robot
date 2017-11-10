@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 enum class Command_t : uint8_t {
-	invalid,
+	invalid = 0,
 	stop,
 	play,
 	clear,
