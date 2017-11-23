@@ -22,7 +22,7 @@ void RFIDReader::stateInit(Phase_t p) {
 
 void RFIDReader::stateWaitingForCard(Phase_t p) {
 	if (p == Enter) {
-		logr << '\n' << F("RFID Reader enter WaitingForCard");
+		logr << F("RFID Reader enter WaitingForCard");
 	}
 	if (p == Update) {
 		if (mfrc522.PICC_IsNewCardPresent()) {

@@ -14,25 +14,7 @@ class CommandHandler : public StateMachine<CommandHandler> {
 	void init() {
 		stateGoto(&CommandHandler::stateInit);
 	}
-
-	void addCommand(const Command& c) {
-		if (m_commandCount == MAX_COMMANDS) {
-			return;
-		}
-		switch (c.type) {
-			case Command_t::play:
-				stateGoto(&CommandHandler::stateExecCommands);
-				break;
-			case Command_t::clear:
-				stateGoto(&CommandHandler::stateInit);
-				break;
-			case Command_t::stop:
-				stateGoto(&CommandHandler::stateAcceptCommands);
-				break;
-			default:
-				m_commandList[m_commandCount++] = c;
-		}
-	}
+	void addCommand(const Command& c);
 
    private:
 	void stateInit(Phase_t p);

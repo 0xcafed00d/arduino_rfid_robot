@@ -10,7 +10,30 @@ void CommandHandler::stateInit(Phase_t p) {
 }
 
 void CommandHandler::stateAcceptCommands(Phase_t p) {
+	if (p == Phase_t::Enter) {
+	}
 }
 
 void CommandHandler::stateExecCommands(Phase_t p) {
+	if (p == Phase_t::Enter) {
+	}
+}
+
+void CommandHandler::addCommand(const Command& c) {
+	if (m_commandCount == MAX_COMMANDS) {
+		return;
+	}
+	switch (c.type) {
+		case Command_t::play:
+			stateGoto(&CommandHandler::stateExecCommands);
+			break;
+		case Command_t::clear:
+			stateGoto(&CommandHandler::stateInit);
+			break;
+		case Command_t::stop:
+			stateGoto(&CommandHandler::stateAcceptCommands);
+			break;
+		default:
+			m_commandList[m_commandCount++] = c;
+	}
 }

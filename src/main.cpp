@@ -15,8 +15,10 @@ RFIDReader rfid(SS_PIN, RST_PIN);
 CommandHandler cmdHandler;
 
 void onCardRead(char* data) {
-	Serial.println(data);
+	logr << data;
 	Command c = parseCommand(data);
+	logr << (uint16_t)c.type << c.duration;
+
 	cmdHandler.addCommand(c);
 }
 
@@ -32,7 +34,7 @@ void setup() {
 
 void loop() {
 	logr.enable(bool(Serial));
-	logr.enable(false);
+	// logr.enable(false);
 
 	delay(10);
 	rfid.stateUpdate();
