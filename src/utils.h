@@ -20,6 +20,7 @@ namespace utils {
 	};
 
 	void logByteArray(byte* buffer, byte bufferSize);
-}
+
+}  // namespace utils
 
 #endif  // ARDUINO_RFID_MUSICPLAYER_UTILS_H

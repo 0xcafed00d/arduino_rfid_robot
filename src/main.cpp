@@ -1,7 +1,8 @@
 #include "Arduino.h"
-#include "rfidreader.h"
-#include "commandhandler.h"
 #include "SPI.h"
+#include "cli.h"
+#include "commandhandler.h"
+#include "rfidreader.h"
 #include "utils.h"
 
 #include "log.h"
@@ -14,12 +15,19 @@ const int SS_PIN = 10;
 RFIDReader rfid(SS_PIN, RST_PIN);
 CommandHandler cmdHandler;
 
+char inputBuffer[64];
+CLI cmdLine(&Serial, inputBuffer, 5);
+
 void onCardRead(char* data) {
 	logr << data;
 	Command c = parseCommand(data);
 	logr << (uint16_t)c.type << c.duration;
 
 	cmdHandler.addCommand(c);
+}
+
+void onLine(char* data) {
+	logr << ">>>>>>" << data << "<<<<<<";
 }
 
 void setup() {
@@ -30,13 +38,18 @@ void setup() {
 	rfid.setOnCardRead(&onCardRead);
 
 	cmdHandler.init();
+	cmdLine.setOnCLILine(&onLine);
 }
 
 void loop() {
 	logr.enable(bool(Serial));
 	// logr.enable(false);
 
-	delay(10);
-	rfid.stateUpdate();
-	cmdHandler.stateUpdate();
+	//	cmdLine.update();
+
+	//	delay(10);
+	//	rfid.stateUpdate();
+	//	cmdHandler.stateUpdate();
+
+	cmdLine.update();
 }
