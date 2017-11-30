@@ -1,5 +1,5 @@
-#include <Arduino.h>
 #include "command.h"
+#include <Arduino.h>
 
 // command format:
 // CMD:XXX:YY
@@ -23,13 +23,11 @@ Command parseCommand(const char* s) {
 		return {Command_t::invalid, 0};
 	}
 
-	auto c = cmdstrs;
 	auto i = 0;
-	while (*c) {
-		if (memcmp(c, s + 4, 3) == 0) {
+	while (cmdstrs[i]) {
+		if (memcmp(cmdstrs + i * 3, s + 4, 3) == 0) {
 			return {Command_t(i), (uint8_t)strtoul(s + 8, NULL, 16)};
 		}
-		c += 3;
 		i++;
 	}
 	return {Command_t::invalid, 0};

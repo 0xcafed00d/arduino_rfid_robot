@@ -21,14 +21,14 @@ class RFIDReader : public StateMachine<RFIDReader> {
 		m_onReadCard = f;
 	}
 
+	bool readFromCard(byte* buffer, byte size, byte blockAddr);
+	bool writeToCard(byte* buffer, byte size, byte blockAddr);
+
    private:
 	void stateInit(Phase_t p);
 	void stateWaitingForCard(Phase_t p);
 	void stateReadCard(Phase_t p);
 	void stateRestart(Phase_t p);
-
-	bool readFromCard(byte* buffer, byte size, byte blockAddr);
-	bool writeToCard(byte* buffer, byte size, byte blockAddr);
 
 	MFRC522 mfrc522;
 	MFRC522::MIFARE_Key key;

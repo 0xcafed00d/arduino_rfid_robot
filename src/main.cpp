@@ -30,12 +30,26 @@ void onLine(char* data) {
 	logr << ">>>>>>" << data << "<<<<<<";
 }
 
+void onCardRead_write(char* data) {
+	Serial.println(data);
+
+	byte buffer[18];
+	byte size = sizeof(buffer);
+
+	strcpy((char*)buffer, "CMD:TNL:4E");
+
+	rfid.writeToCard(buffer, size, 1);
+	rfid.readFromCard(buffer, size, 1);
+
+	Serial.println(data);
+}
+
 void setup() {
 	// while(!Serial);  // Remove before Flight
 	SPI.begin();
 
 	rfid.init();
-	rfid.setOnCardRead(&onCardRead);
+	rfid.setOnCardRead(&onCardRead_write);
 
 	cmdHandler.init();
 	cmdLine.setOnCLILine(&onLine);
