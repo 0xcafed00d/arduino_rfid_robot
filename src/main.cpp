@@ -16,7 +16,7 @@ RFIDReader rfid(SS_PIN, RST_PIN);
 CommandHandler cmdHandler;
 
 char inputBuffer[64];
-CLI cmdLine(&Serial, inputBuffer, 5);
+CLI cmdLine(&Serial, inputBuffer, 64);
 
 void onCardRead(char* data) {
 	logr << data;

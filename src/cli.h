@@ -15,12 +15,14 @@ class CLI {
 	}
 
    private:
+	void doEscape(char c);
 	void doInsert(char c);
 	void doEnter();
 	void doBackSpace();
 	void doDelete();
 	void doCursorL();
 	void doCursorR();
+	void setCursorPos();
 
 	size_t m_cursorPos = 0;
 	size_t m_bufferPos = 0;
@@ -28,6 +30,7 @@ class CLI {
 	char* m_buffer;
 	size_t m_bufferSize;
 	OnCLILine m_onLineFunc;
+	uint8_t m_escape;
 };
 
 #endif /* CLI_H */
