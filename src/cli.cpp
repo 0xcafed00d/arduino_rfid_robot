@@ -45,15 +45,18 @@ void CLI::update() {
 
 		m_str->print('\r');
 		m_str->print(m_buffer);
+		m_str->print(' ');
 		setCursorPos();
 	}
 }
 
 void CLI::setCursorPos() {
 	m_str->print('\r');
-	m_str->print("\x1b[");
-	m_str->print(m_cursorPos);
-	m_str->print('C');
+	if (m_cursorPos) {
+		m_str->print("\x1b[");
+		m_str->print(m_cursorPos);
+		m_str->print('C');
+	}
 }
 
 void CLI::doEscape(char c) {
@@ -85,7 +88,11 @@ void CLI::doEnter() {
 }
 
 void CLI::doBackSpace() {
-	m_str->println("doBackSpace");
+	if (m_bufferPos > 0 && m_cursorPos > 0) {
+		memmove(m_buffer + m_cursorPos - 1, m_buffer + m_cursorPos, m_bufferPos - m_cursorPos);
+		m_buffer[--m_bufferPos] = 0;
+		m_cursorPos--;
+	}
 }
 
 void CLI::doDelete() {
@@ -98,5 +105,6 @@ void CLI::doCursorL() {
 }
 
 void CLI::doCursorR() {
-	m_cursorPos++;
+	if (m_cursorPos < m_bufferPos)
+		m_cursorPos++;
 }
