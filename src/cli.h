@@ -15,13 +15,15 @@ class CLI {
 	}
 
    private:
-	void doEscape(char c);
+	uint8_t doEscape(char c);
 	void doInsert(char c);
 	void doEnter();
 	void doBackSpace();
 	void doDelete();
 	void doCursorL();
 	void doCursorR();
+	void doHome();
+	void doEnd();
 	void setCursorPos();
 
 	size_t m_cursorPos = 0;

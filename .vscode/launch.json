@@ -6,7 +6,7 @@
             "request": "launch",
             "cwd": "${workspaceRoot}",
             "name": "PlatformIO Debugger",
-            "target": "/home/lmw/development/arduino_rfid_robot/.pioenvs/sparkfun_promicro8/firmware.elf",
+            "target": "/home/lmw/development/arduino_rfid_robot/.pioenvs/leonardo/firmware.elf",
             "gdbpath": "/home/lmw/.platformio/penv/bin/piodebuggdb",
             "autorun": [ "source .pioinit" ]
         }

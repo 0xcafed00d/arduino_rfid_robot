@@ -14,17 +14,19 @@ void CLI::clear() {
 
 void CLI::update() {
 	if (m_str->available()) {
-		bool updateOutput = false;
 		char c = m_str->read();
+
+		// m_str->println((int)c, 16);
+		// return;
+
 		if (c == 0x0d) {
 			doEnter();
 		}
 
 		switch (m_escape) {
 			case 0:
-				if (c >= ' ' && c < 128) {
+				if (c >= ' ' && c < 127) {
 					doInsert(c);
-					updateOutput = true;
 				} else {
 					if (c == 0x1b)
 						m_escape++;
@@ -35,7 +37,10 @@ void CLI::update() {
 					m_escape++;
 				break;
 			case 2:
-				doEscape(c);
+				m_escape = doEscape(c);
+				break;
+			case 3:
+				m_escape = 0;  // absorb 0x7e escape terminiator
 				break;
 		}
 
@@ -59,7 +64,7 @@ void CLI::setCursorPos() {
 	}
 }
 
-void CLI::doEscape(char c) {
+uint8_t CLI::doEscape(char c) {
 	switch (c) {
 		case 'D':  // cursor left
 			doCursorL();
@@ -67,8 +72,20 @@ void CLI::doEscape(char c) {
 		case 'C':  // cursor right
 			doCursorR();
 			break;
+		case '3':
+			doDelete();
+			return 3;
+			break;
+		case '1':
+			doHome();
+			return 3;
+			break;
+		case '4':
+			doEnd();
+			return 3;
+			break;
 	}
-	m_escape = 0;
+	return 0;
 }
 
 void CLI::doInsert(char c) {
@@ -77,6 +94,14 @@ void CLI::doInsert(char c) {
 		m_buffer[m_cursorPos++] = c;
 		m_buffer[++m_bufferPos] = 0;
 	}
+}
+
+void CLI::doHome() {
+	m_cursorPos = 0;
+}
+
+void CLI::doEnd() {
+	m_cursorPos = m_bufferPos;
 }
 
 void CLI::doEnter() {
@@ -96,7 +121,10 @@ void CLI::doBackSpace() {
 }
 
 void CLI::doDelete() {
-	m_str->println("doDelete");
+	if (m_cursorPos < m_bufferPos) {
+		memmove(m_buffer + m_cursorPos, m_buffer + m_cursorPos + 1, m_bufferPos - m_cursorPos - 1);
+		m_buffer[--m_bufferPos] = 0;
+	}
 }
 
 void CLI::doCursorL() {
