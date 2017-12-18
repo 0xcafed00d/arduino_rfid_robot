@@ -11,11 +11,18 @@ void CommandHandler::stateInit(Phase_t p) {
 
 void CommandHandler::stateAcceptCommands(Phase_t p) {
 	if (p == Phase_t::Enter) {
+		m_acceptCommands = true;
+	}
+	if (p == Phase_t::Leave) {
+		m_acceptCommands = false;
 	}
 }
 
 void CommandHandler::stateExecCommands(Phase_t p) {
 	if (p == Phase_t::Enter) {
+		m_currentCommand = 0;
+	}
+	if (p == Phase_t::Update) {
 	}
 }
 
