@@ -18,16 +18,21 @@ CommandHandler cmdHandler;
 char inputBuffer[64];
 CLI cmdLine(&Serial, inputBuffer, 64);
 
-void onCardRead(char* data) {
-	logr << data;
+void addCommand(char* data) {
 	Command c = parseCommand(data);
 	logr << (uint16_t)c.type << c.duration;
-
 	cmdHandler.addCommand(c);
 }
 
-void onLine(char* data) {
-	logr << ">>>>>>" << data << "<<<<<<";
+void onCardRead(char* data) {
+	logr << F("RFID input") << data;
+	addCommand(data);
+}
+
+void onCmdLine(char* data) {
+	Serial.println();
+	logr << F("CMDLine input") << data;
+	addCommand(data);
 }
 
 void onCardRead_write(char* data) {
@@ -52,18 +57,14 @@ void setup() {
 	rfid.setOnCardRead(&onCardRead_write);
 
 	cmdHandler.init();
-	cmdLine.setOnCLILine(&onLine);
+	cmdLine.setOnCLILine(&onCmdLine);
 }
 
 void loop() {
 	logr.enable(bool(Serial));
-	// logr.enable(false);
-
-	//	cmdLine.update();
-
-	//	delay(10);
-	//	rfid.stateUpdate();
-	//	cmdHandler.stateUpdate();
+	//	logr.enable(true);
 
 	cmdLine.update();
+	rfid.stateUpdate();
+	cmdHandler.stateUpdate();
 }
