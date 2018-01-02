@@ -36,6 +36,10 @@ class Logger {
 	Logger(Stream& strm) : m_stream(strm) {
 	}
 
+	Stream& stream() {
+		return m_stream;
+	}
+
 	template <typename T>
 	LogProxy operator<<(const T& v) {
 		if (m_enabled) {

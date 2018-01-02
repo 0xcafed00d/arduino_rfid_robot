@@ -20,8 +20,12 @@ CLI cmdLine(&Serial, inputBuffer, 64);
 
 void addCommand(char* data) {
 	Command c = parseCommand(data);
-	logr << (uint16_t)c.type << c.duration;
-	cmdHandler.addCommand(c);
+	if (c.type == Command_t::invalid) {
+		logr << F("Invalid Command");
+	} else {
+		logr << CommandPrint(c);
+		cmdHandler.addCommand(c);
+	}
 }
 
 void onCardRead(char* data) {
@@ -50,7 +54,9 @@ void onCardRead_write(char* data) {
 }
 
 void setup() {
-	// while(!Serial);  // Remove before Flight
+	while (!Serial) {
+	}  // Remove before Flight
+
 	SPI.begin();
 
 	rfid.init();
@@ -62,7 +68,6 @@ void setup() {
 
 void loop() {
 	logr.enable(bool(Serial));
-	//	logr.enable(true);
 
 	cmdLine.update();
 	rfid.stateUpdate();

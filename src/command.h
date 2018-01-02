@@ -20,6 +20,14 @@ struct Command {
 	uint8_t duration;  // 10th second increments. 0 = instantaneous, 255 = forever
 };
 
+struct CommandPrint : public Printable {
+	CommandPrint(Command& c) : cmd(c) {
+	}
+	size_t printTo(Print& p) const;
+
+	const Command& cmd;
+};
+
 Command parseCommand(const char* s);
 
 // return false if command processind is to stop immediately

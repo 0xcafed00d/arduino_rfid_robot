@@ -36,3 +36,14 @@ Command parseCommand(const char* s) {
 bool execCommand(const Command_t c) {
 	return false;
 }
+
+size_t CommandPrint::printTo(Print& p) const {
+	size_t sz = 0;
+	sz += p.print(F("CMD:"));
+	for (int n = 0; n < 3; n++) {
+		sz += p.print(cmdstrs[int(cmd.type) * 3 + n]);
+	}
+	sz += p.print(F(":0x"));
+	sz += p.print(cmd.duration, HEX);
+	return sz;
+}
