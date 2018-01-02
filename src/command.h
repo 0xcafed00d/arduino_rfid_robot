@@ -21,7 +21,7 @@ struct Command {
 };
 
 struct CommandPrint : public Printable {
-	CommandPrint(Command& c) : cmd(c) {
+	CommandPrint(const Command& c) : cmd(c) {
 	}
 	size_t printTo(Print& p) const;
 

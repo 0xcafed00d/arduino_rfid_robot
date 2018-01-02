@@ -17,11 +17,13 @@ class CommandHandler : public StateMachine<CommandHandler> {
 	void addCommand(const Command& c);
 
    private:
+	void execCommand(const Command& c);
+
 	void stateInit(Phase_t p);
 	void stateAcceptCommands(Phase_t p);
 	void stateExecCommands(Phase_t p);
 
-	utils::TimeOut m_timeout;
+	utils::TimeOut m_commandTime;
 
 	static const int MAX_COMMANDS = 128;
 	int m_commandCount = 0;
