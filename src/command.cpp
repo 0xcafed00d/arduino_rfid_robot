@@ -8,7 +8,7 @@
 
 // invalid		NUL, 00
 // stop			STO, 00
-// play			PLA, 00
+// run			RUN, 00
 // clear		CLR, 00
 // forward		FWD, Duration
 // backward		BKW, Duration
@@ -16,7 +16,7 @@
 // turn_r		TNR, Duration
 // beep			BEP, Tone
 
-static const char* cmdstrs = "NULSTOPLACLRFWDBKWTNLTNRBEP";
+static const char* cmdstrs = "NULSTORUNCLRFWDBKWTNLTNRBEP";
 
 Command parseCommand(const char* s) {
 	if (strlen(s) != 10 || memcmp(s, "CMD:", 4)) {

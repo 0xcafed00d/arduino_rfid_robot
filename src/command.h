@@ -6,7 +6,7 @@
 enum class Command_t : uint8_t {
 	invalid = 0,
 	stop,
-	play,
+	run,
 	clear,
 	forward,
 	backward,

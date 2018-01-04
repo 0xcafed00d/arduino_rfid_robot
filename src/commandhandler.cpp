@@ -52,7 +52,7 @@ void CommandHandler::addCommand(const Command& c) {
 		return;
 	}
 	switch (c.type) {
-		case Command_t::play:
+		case Command_t::run:
 			stateGoto(&CommandHandler::stateExecCommands);
 			break;
 		case Command_t::clear:
