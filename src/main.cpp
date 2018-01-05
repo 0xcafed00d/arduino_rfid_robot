@@ -5,6 +5,7 @@
 #include "rfidreader.h"
 #include "utils.h"
 
+#include "Mouse.h"
 #include "log.h"
 
 Logger logr(Serial);
@@ -34,6 +35,7 @@ void onCardRead(char* data) {
 }
 
 void onCmdLine(char* data) {
+	cmdLine.bufferToUpper();
 	Serial.println();
 	logr << F("CMDLine input") << data;
 	addCommand(data);
@@ -54,6 +56,11 @@ void onCardRead_write(char* data) {
 }
 
 void setup() {
+	pinMode(LED_BUILTIN, OUTPUT);
+
+	Mouse.begin();  // temp fix - enabling mouse stops leonardo being
+	                // put unto suspend mode when plugged into linux system.
+
 	while (!Serial) {
 	}  // Remove before Flight
 
@@ -64,6 +71,11 @@ void setup() {
 
 	cmdHandler.init();
 	cmdLine.setOnCLILine(&onCmdLine);
+
+	addCommand("CMD:FWD:40");
+	addCommand("CMD:FWD:50");
+	addCommand("CMD:FWD:60");
+	addCommand("CMD:FWD:70");
 }
 
 void loop() {

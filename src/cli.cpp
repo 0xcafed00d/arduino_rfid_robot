@@ -12,6 +12,14 @@ void CLI::clear() {
 	m_escape = 0;
 }
 
+void CLI::bufferToUpper() {
+	char* buf = m_buffer;
+	while (*buf) {
+		*buf = toUpperCase(*buf);
+		buf++;
+	}
+}
+
 void CLI::update() {
 	if (m_str->available()) {
 		char c = m_str->read();

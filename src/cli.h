@@ -14,6 +14,8 @@ class CLI {
 		m_onLineFunc = f;
 	}
 
+	void bufferToUpper();
+
    private:
 	uint8_t doEscape(char c);
 	void doInsert(char c);

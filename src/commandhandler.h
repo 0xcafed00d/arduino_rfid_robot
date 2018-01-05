@@ -24,6 +24,8 @@ class CommandHandler : public StateMachine<CommandHandler> {
 	void stateExecCommands(Phase_t p);
 
 	utils::TimeOut m_commandTime;
+	utils::TimeOut m_ledTime;
+	bool m_led = false;
 
 	static const int MAX_COMMANDS = 128;
 	int m_commandCount = 0;

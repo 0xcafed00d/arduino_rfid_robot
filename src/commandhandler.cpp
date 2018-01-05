@@ -14,6 +14,14 @@ void CommandHandler::stateAcceptCommands(Phase_t p) {
 	if (p == Phase_t::Enter) {
 		logr << F("CommandHandler::stateAcceptCommands");
 		m_acceptCommands = true;
+		m_ledTime = utils::TimeOut(500);
+	}
+	if (p == Phase_t::Update) {
+		if (m_ledTime.hasTimedOut()) {
+			digitalWrite(LED_BUILTIN, m_led);
+			m_led = !m_led;
+			m_ledTime = utils::TimeOut(500);
+		}
 	}
 	if (p == Phase_t::Leave) {
 		m_acceptCommands = false;
@@ -25,9 +33,17 @@ void CommandHandler::stateExecCommands(Phase_t p) {
 		logr << F("CommandHandler::stateExecCommands");
 		m_currentCommand = -1;
 		m_commandTime = utils::TimeOut(0);
+		m_ledTime = utils::TimeOut(50);
 	}
 	if (p == Phase_t::Update) {
+		if (m_ledTime.hasTimedOut()) {
+			digitalWrite(LED_BUILTIN, m_led);
+			m_led = !m_led;
+			m_ledTime = utils::TimeOut(50);
+		}
+
 		if (m_commandTime.hasTimedOut()) {
+			UDCON |= (1 << RMWKUP);
 			m_currentCommand++;
 			if (m_currentCommand == m_commandCount) {
 				stateGoto(&CommandHandler::stateAcceptCommands);
@@ -46,8 +62,6 @@ void CommandHandler::execCommand(const Command& c) {
 }
 
 void CommandHandler::addCommand(const Command& c) {
-	logr << F("Cmd #") << m_commandCount << ':' << CommandPrint(c) << F("Added");
-
 	if (m_commandCount == MAX_COMMANDS) {
 		return;
 	}
@@ -62,6 +76,9 @@ void CommandHandler::addCommand(const Command& c) {
 			stateGoto(&CommandHandler::stateAcceptCommands);
 			break;
 		default:
-			m_commandList[m_commandCount++] = c;
+			if (m_acceptCommands) {
+				logr << F("Cmd #") << m_commandCount << ':' << CommandPrint(c) << F("Added");
+				m_commandList[m_commandCount++] = c;
+			}
 	}
 }
