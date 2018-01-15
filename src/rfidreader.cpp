@@ -17,7 +17,13 @@ void RFIDReader::stateInit(Phase_t p) {
 			key.keyByte[i] = 0xFF;
 		}
 		stateGoto(&RFIDReader::stateWaitingForCard);
+		m_writeNextCard = false;
 	}
+}
+
+void RFIDReader::writeNextCard(const char* data) {
+	m_writeNextCard = true;
+	strcpy(m_data2Write, data);
 }
 
 void RFIDReader::stateWaitingForCard(Phase_t p) {
@@ -45,20 +51,19 @@ void RFIDReader::stateReadCard(Phase_t p) {
 		byte buffer[18];
 		byte size = sizeof(buffer);
 
-		// strcpy ((char*)buffer, "music:03");
-
 		if (mfrc522.PICC_ReadCardSerial()) {
 			logr << F("Card UID:");
 			utils::logByteArray(mfrc522.uid.uidByte, mfrc522.uid.size);
 
-			// writeToCard(buffer, size, 1);
-
-			bool ok = readFromCard(buffer, size, 1);
-
-			if (ok) {
-				logr << (char*)buffer;
-				if (m_onReadCard) {
-					m_onReadCard((char*)buffer);
+			if (m_writeNextCard) {
+				bool ok = writeToCard((byte*)m_data2Write, strlen(m_data2Write) + 1, 1);
+			} else {
+				bool ok = readFromCard(buffer, size, 1);
+				if (ok) {
+					logr << (char*)buffer;
+					if (m_onReadCard) {
+						m_onReadCard((char*)buffer);
+					}
 				}
 			}
 			stateGoto(&RFIDReader::stateRestart);
@@ -111,23 +116,19 @@ bool RFIDReader::writeToCard(byte* buffer, byte size, byte blockAddr) {
 	byte trailerBlock = calcTrailerBlock(blockAddr);
 
 	// Authenticate using key B
-	Serial.println(F("Authenticating again using key B..."));
+	logr << F("Authenticating again using key B...");
 	MFRC522::StatusCode status = (MFRC522::StatusCode)mfrc522.PCD_Authenticate(
 	    MFRC522::PICC_CMD_MF_AUTH_KEY_B, trailerBlock, &key, &(mfrc522.uid));
 	if (status != MFRC522::STATUS_OK) {
-		Serial.print(F("PCD_Authenticate() failed: "));
-		Serial.println(mfrc522.GetStatusCodeName(status));
+		logr << F("PCD_Authenticate() failed: ") << mfrc522.GetStatusCodeName(status);
 		return false;
 	}
 
 	// Write data to the block
-	Serial.print(F("Writing data into block "));
-	Serial.print(blockAddr);
-	Serial.println(F(" ..."));
+	logr << F("Writing data into block ") << blockAddr << F(" ...");
 	status = (MFRC522::StatusCode)mfrc522.MIFARE_Write(blockAddr, buffer, 16);
 	if (status != MFRC522::STATUS_OK) {
-		Serial.print(F("MIFARE_Write() failed: "));
-		Serial.println(mfrc522.GetStatusCodeName(status));
+		logr << F("MIFARE_Write() failed: ") << mfrc522.GetStatusCodeName(status);
 		return false;
 	}
 	return true;

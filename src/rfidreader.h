@@ -21,10 +21,12 @@ class RFIDReader : public StateMachine<RFIDReader> {
 		m_onReadCard = f;
 	}
 
+	void writeNextCard(const char* data);
+
+   private:
 	bool readFromCard(byte* buffer, byte size, byte blockAddr);
 	bool writeToCard(byte* buffer, byte size, byte blockAddr);
 
-   private:
 	void stateInit(Phase_t p);
 	void stateWaitingForCard(Phase_t p);
 	void stateReadCard(Phase_t p);
@@ -34,6 +36,8 @@ class RFIDReader : public StateMachine<RFIDReader> {
 	MFRC522::MIFARE_Key key;
 	utils::TimeOut timeout;
 	OnCardRead m_onReadCard = NULL;
+	char m_data2Write[32];
+	bool m_writeNextCard = false;
 };
 
 #endif  // ARDUINO_RFID_ROBOT_RDIFREADER_H
