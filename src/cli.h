@@ -13,8 +13,9 @@ class CLI {
 	void setOnCLILine(OnCLILine f) {
 		m_onLineFunc = f;
 	}
-
+	void setPrompt(const char* prompt);
 	void bufferToUpper();
+	void outputBuffer();
 
    private:
 	uint8_t doEscape(char c);
@@ -35,6 +36,7 @@ class CLI {
 	size_t m_bufferSize;
 	OnCLILine m_onLineFunc;
 	uint8_t m_escape;
+	size_t m_promptLen = 0;
 };
 
 #endif /* CLI_H */

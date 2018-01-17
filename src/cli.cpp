@@ -6,14 +6,21 @@ CLI::CLI(Stream* s, char* buffer, size_t bufferSize)
 }
 
 void CLI::clear() {
-	m_bufferPos = 0;
-	m_cursorPos = 0;
-	m_buffer[0] = 0;
+	m_bufferPos = m_promptLen;
+	m_cursorPos = m_promptLen;
+	m_buffer[m_promptLen] = 0;
 	m_escape = 0;
 }
 
+void CLI::setPrompt(const char* prompt) {
+	strcpy(m_buffer, prompt);
+	m_promptLen = strlen(prompt);
+	clear();
+	outputBuffer();
+}
+
 void CLI::bufferToUpper() {
-	char* buf = m_buffer;
+	char* buf = m_buffer + m_promptLen;
 	while (*buf) {
 		*buf = toUpperCase(*buf);
 		buf++;
@@ -23,9 +30,6 @@ void CLI::bufferToUpper() {
 void CLI::update() {
 	if (m_str->available()) {
 		char c = m_str->read();
-
-		// m_str->println((int)c, 16);
-		// return;
 
 		if (c == 0x0d) {
 			doEnter();
@@ -55,12 +59,15 @@ void CLI::update() {
 		if (c == 8) {  // backspace
 			doBackSpace();
 		}
-
-		m_str->print('\r');
-		m_str->print(m_buffer);
-		m_str->print(' ');
-		setCursorPos();
+		outputBuffer();
 	}
+}
+
+void CLI::outputBuffer() {
+	m_str->print('\r');
+	m_str->print(m_buffer);
+	m_str->print(' ');
+	setCursorPos();
 }
 
 void CLI::setCursorPos() {
@@ -105,7 +112,7 @@ void CLI::doInsert(char c) {
 }
 
 void CLI::doHome() {
-	m_cursorPos = 0;
+	m_cursorPos = m_promptLen;
 }
 
 void CLI::doEnd() {
@@ -113,15 +120,17 @@ void CLI::doEnd() {
 }
 
 void CLI::doEnter() {
+	m_str->println();
+
 	if (m_onLineFunc) {
-		m_onLineFunc(m_buffer);
+		m_onLineFunc(m_buffer + m_promptLen);
 	}
 
 	clear();
 }
 
 void CLI::doBackSpace() {
-	if (m_bufferPos > 0 && m_cursorPos > 0) {
+	if (m_bufferPos > m_promptLen && m_cursorPos > m_promptLen) {
 		memmove(m_buffer + m_cursorPos - 1, m_buffer + m_cursorPos, m_bufferPos - m_cursorPos);
 		m_buffer[--m_bufferPos] = 0;
 		m_cursorPos--;
@@ -136,7 +145,7 @@ void CLI::doDelete() {
 }
 
 void CLI::doCursorL() {
-	if (m_cursorPos > 0)
+	if (m_cursorPos > m_promptLen)
 		m_cursorPos--;
 }
 

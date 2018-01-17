@@ -9,7 +9,7 @@
 	],
 	"settings": {
 		"terminal.integrated.env.linux": {
-			"PATH": "/home/lmw/.platformio/penv/bin:/home/lmw/bin:/home/lmw/.local/bin:/home/lmw/bin:/home/lmw/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/local/go/bin:/home/lmw/development/go/bin:/home/lmw/.platformio/penv/bin:/home/lmw/tools/android-studio/jre/bin:/usr/local/go/bin:/home/lmw/development/go/bin:/home/lmw/.platformio/penv/bin:/home/lmw/tools/android-studio/jre/bin"
+			"PATH": "/home/lmw/.platformio/penv/bin:/home/lmw/.platformio/penv:/home/lmw/bin:/home/lmw/.local/bin:/home/lmw/bin:/home/lmw/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/local/go/bin:/home/lmw/development/go/bin:/home/lmw/.platformio/penv/bin:/home/lmw/tools/android-studio/jre/bin:/usr/local/go/bin:/home/lmw/development/go/bin:/home/lmw/.platformio/penv/bin:/home/lmw/tools/android-studio/jre/bin"
 		}
 	}
 }

@@ -5,7 +5,7 @@
 #include "rfidreader.h"
 #include "utils.h"
 
-#include "Mouse.h"
+//#include "Mouse.h"
 #include "log.h"
 
 Logger logr(Serial);
@@ -22,7 +22,7 @@ CLI cmdLine(&Serial, inputBuffer, 64);
 void addCommand(char* data) {
 	Command c = parseCommand(data);
 	if (c.type == Command_t::invalid) {
-		logr << F("Invalid Command");
+		logr << F("Invalid Command") << data;
 	} else {
 		logr << CommandPrint(c);
 		cmdHandler.addCommand(c);
@@ -37,8 +37,10 @@ void onCardRead(char* data) {
 void onCmdLine(char* data);
 
 void onCmdLineWrite(char* data) {
+	cmdLine.bufferToUpper();
 	if (strcmp(data, "EXIT") == 0) {
-		Serial.println(F("Exit Write Mode"));
+		cmdLine.setPrompt("CMD> ");
+		rfid.init();
 		cmdLine.setOnCLILine(onCmdLine);
 		return;
 	}
@@ -49,11 +51,22 @@ void onCmdLineWrite(char* data) {
 
 void onCmdLine(char* data) {
 	cmdLine.bufferToUpper();
-	Serial.println();
 	logr << F("CMDLine input") << data;
 
+	if (strcmp(data, "TRON") == 0) {
+		logr.enable(true);
+		logr << F("Trace on");
+		return;
+	}
+
+	if (strcmp(data, "TROFF") == 0) {
+		logr << F("Trace off");
+		logr.enable(false);
+		return;
+	}
+
 	if (strcmp(data, "WRITE") == 0) {
-		Serial.println(F("WRITE MODE: enter data to write"));
+		cmdLine.setPrompt("WRITE> ");
 		cmdLine.setOnCLILine(onCmdLineWrite);
 		return;
 	}
@@ -67,8 +80,11 @@ void setup() {
 
 	pinMode(LED_BUILTIN, OUTPUT);
 
-	Mouse.begin();  // temp fix - enabling mouse stops leonardo being
-	                // put unto suspend mode when plugged into linux system.
+	/*
+	    Mouse.begin();  // temp fix - enabling mouse stops leonardo being
+	                    // put unto suspend mode when plugged into linux system.
+	*/
+	logr.enable(false);
 
 	SPI.begin();
 
@@ -77,12 +93,13 @@ void setup() {
 
 	cmdHandler.init();
 	cmdLine.setOnCLILine(&onCmdLine);
+	cmdLine.setPrompt("CMD> ");
 }
 
 void loop() {
-	logr.enable(bool(Serial));
+	//	logr.enable(bool(Serial));
 
 	cmdLine.update();
-	rfid.stateUpdate();
+	//	rfid.stateUpdate();
 	cmdHandler.stateUpdate();
 }
