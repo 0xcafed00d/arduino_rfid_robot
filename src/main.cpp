@@ -5,7 +5,7 @@
 #include "rfidreader.h"
 #include "utils.h"
 
-//#include "Mouse.h"
+#include "Mouse.h"
 #include "log.h"
 
 Logger logr(Serial);
@@ -74,16 +74,16 @@ void onCmdLine(char* data) {
 	addCommand(data);
 }
 
+int ACIVITY_LED = 17;
+
 void setup() {
 	while (!Serial) {
 	}  // Remove before Flight
 
-	pinMode(LED_BUILTIN, OUTPUT);
+	pinMode(ACIVITY_LED, OUTPUT);
 
-	/*
-	    Mouse.begin();  // temp fix - enabling mouse stops leonardo being
-	                    // put unto suspend mode when plugged into linux system.
-	*/
+	Mouse.begin();  // temp fix - enabling mouse stops leonardo being
+	                // put unto suspend mode when plugged into linux system.
 	logr.enable(false);
 
 	SPI.begin();
@@ -100,6 +100,6 @@ void loop() {
 	//	logr.enable(bool(Serial));
 
 	cmdLine.update();
-	//	rfid.stateUpdate();
+	rfid.stateUpdate();
 	cmdHandler.stateUpdate();
 }

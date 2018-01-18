@@ -1,6 +1,8 @@
 #include "commandhandler.h"
 #include "log.h"
 
+extern int ACIVITY_LED;
+
 void CommandHandler::stateInit(Phase_t p) {
 	if (p == Phase_t::Enter) {
 		logr << F("CommandHandler::stateInit");
@@ -17,11 +19,11 @@ void CommandHandler::stateAcceptCommands(Phase_t p) {
 		m_ledTime = utils::TimeOut(500);
 	}
 	if (p == Phase_t::Update) {
-		/*		if (m_ledTime.hasTimedOut()) {
-		            digitalWrite(LED_BUILTIN, m_led);
-		            m_led = !m_led;
-		            m_ledTime = utils::TimeOut(500);
-		        }*/
+		if (m_ledTime.hasTimedOut()) {
+			digitalWrite(ACIVITY_LED, m_led);
+			m_led = !m_led;
+			m_ledTime = utils::TimeOut(500);
+		}
 	}
 	if (p == Phase_t::Leave) {
 		m_acceptCommands = false;
@@ -37,7 +39,7 @@ void CommandHandler::stateExecCommands(Phase_t p) {
 	}
 	if (p == Phase_t::Update) {
 		if (m_ledTime.hasTimedOut()) {
-			digitalWrite(LED_BUILTIN, m_led);
+			digitalWrite(ACIVITY_LED, m_led);
 			m_led = !m_led;
 			m_ledTime = utils::TimeOut(50);
 		}
